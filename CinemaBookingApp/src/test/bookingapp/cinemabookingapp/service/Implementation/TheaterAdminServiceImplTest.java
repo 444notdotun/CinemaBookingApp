@@ -1,7 +1,10 @@
 package bookingapp.cinemabookingapp.service.Implementation;
 
 import bookingapp.cinemabookingapp.data.models.Movies;
+import bookingapp.cinemabookingapp.data.models.Show;
+import bookingapp.cinemabookingapp.data.models.Theater;
 import bookingapp.cinemabookingapp.data.repository.MovieRepo;
+import bookingapp.cinemabookingapp.data.repository.ShowRepository;
 import bookingapp.cinemabookingapp.data.repository.TheaterRepository;
 import bookingapp.cinemabookingapp.dtos.request.CreateAdminRequest;
 import bookingapp.cinemabookingapp.dtos.request.CreateMovieRequest;
@@ -29,6 +32,8 @@ class TheaterAdminServiceImplTest {
     CreateMovieRequest createMovieRequest;
     @Autowired
     TheaterRepository  theaterRepository;
+    @Autowired
+    ShowRepository  showRepository;
 
     @Autowired
     MongoTemplate mongoTemplate;
@@ -83,11 +88,6 @@ class TheaterAdminServiceImplTest {
     @Test
     void testThatMoviesCanBeCreated(){
         assertEquals("The Avengers Civil War created successfully",theaterAdminService.createMovie(createMovieRequest));
-    }
-
-    @Test
-    void testThatAdminCanCreateTheaterAndAddShow(){
-
     }
 
 }

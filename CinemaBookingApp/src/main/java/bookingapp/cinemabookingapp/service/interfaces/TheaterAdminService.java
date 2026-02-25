@@ -7,8 +7,9 @@ import bookingapp.cinemabookingapp.dtos.request.CreateTheaterRequest;
 import bookingapp.cinemabookingapp.dtos.response.AddShowToTheaterResponse;
 import bookingapp.cinemabookingapp.dtos.response.CreateShowResponse;
 import bookingapp.cinemabookingapp.dtos.response.CreateTheaterResponse;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
-public interface TheaterAdminService {
+public interface TheaterAdminService extends UserDetailsService {
 
     AddShowToTheaterResponse addShowToTheater(AddShowTheaterRequest  addShowTheaterRequest);
     CreateTheaterResponse createTheater( CreateTheaterRequest createTheater);

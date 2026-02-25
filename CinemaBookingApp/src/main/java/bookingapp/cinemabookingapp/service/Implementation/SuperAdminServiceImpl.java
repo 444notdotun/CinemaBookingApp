@@ -10,9 +10,11 @@ import bookingapp.cinemabookingapp.utils.Mapper;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NullMarked;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.ObjectMapper;
 @Slf4j
@@ -21,6 +23,10 @@ import tools.jackson.databind.ObjectMapper;
 public class SuperAdminServiceImpl implements SuperAdminService, UserDetailsService {
     @Autowired
     AdminRepo adminRepo;
+    @Autowired
+    PasswordEncoder  passwordEncoder;
+    @Autowired
+    AuthenticationManager  authenticationManager;
 
     @Override
     public CreateAdminResponse createTheaterAdmin(CreateAdminRequest createAdminRequest) {
@@ -28,6 +34,7 @@ public class SuperAdminServiceImpl implements SuperAdminService, UserDetailsServ
             log.info("admin already exists");
             throw new RuntimeException("The Admin already exists");
         }
+        createAdminRequest.setPassword(passwordEncoder.encode(createAdminRequest.getPassword()));
         Admin admin = Mapper.mapAdminRequestToTheaterAdmin(createAdminRequest);
         saveAdminToDataBase(admin);
         log.info("admin created successfully");

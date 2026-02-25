@@ -43,6 +43,8 @@ public class TheaterAdminServiceImpl implements TheaterAdminService, UserDetails
     @Autowired
     MovieRepo movieRepo;
 
+    private static int counter= 10;
+
 
 
 
@@ -60,6 +62,7 @@ public class TheaterAdminServiceImpl implements TheaterAdminService, UserDetails
     @Override
     public CreateTheaterResponse createTheater(CreateTheaterRequest createTheater) {
        Theater theater= Mapper.MapTheaterRequestToTheater(createTheater);
+       theater.setId("Theater"+counter++);
         theaterRepository.save(theater);
         log.info("theater created successfully");
         return Mapper.SetCreateTheaterResponse(theater);
@@ -72,7 +75,7 @@ public class TheaterAdminServiceImpl implements TheaterAdminService, UserDetails
            throw new RuntimeException(" movie not found, create the movie");
        }
         Show show =Mapper.mapDtosToShow(createShowManagerRequest);
-        show.setId(generateId());
+        show.setId("show"+counter++);
         log.info("show created successfully");
         return Mapper.mapShowToCreateShowResponse(show);
     }
@@ -81,7 +84,7 @@ public class TheaterAdminServiceImpl implements TheaterAdminService, UserDetails
     public String createMovie(CreateMovieRequest createMovieRequest) {
        Movies movies =  Mapper.mapMovieRequestToMovie(createMovieRequest);
        log.info("movie created successfully");
-       movies.setMovieId(generateId());
+       movies.setMovieId("Movie"+counter++);
       movieRepo.save(movies);
       return   movies.getTitle()+" created successfully";
     }
@@ -92,8 +95,5 @@ public class TheaterAdminServiceImpl implements TheaterAdminService, UserDetails
                 .orElseThrow(()-> new  UsernameNotFoundException("Admin not found"));
     }
 
-    private String generateId(){
-        UUID uuid =  UUID.randomUUID();
-        return uuid.toString();
-    }
+
 }
