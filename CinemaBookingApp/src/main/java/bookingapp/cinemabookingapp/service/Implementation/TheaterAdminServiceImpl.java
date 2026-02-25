@@ -33,7 +33,7 @@ import java.util.UUID;
 @Service
 @Slf4j
 @NullMarked
-public class TheaterAdminServiceImpl implements TheaterAdminService, UserDetailsService {
+public class TheaterAdminServiceImpl implements TheaterAdminService {
     @Autowired
     TheaterRepository theaterRepository;
     @Autowired
@@ -89,11 +89,7 @@ public class TheaterAdminServiceImpl implements TheaterAdminService, UserDetails
       return   movies.getTitle()+" created successfully";
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return adminRepo.findAdminById(username)
-                .orElseThrow(()-> new  UsernameNotFoundException("Admin not found"));
-    }
+
 
 
 }

@@ -9,7 +9,7 @@ import bookingapp.cinemabookingapp.dtos.response.CreateShowResponse;
 import bookingapp.cinemabookingapp.dtos.response.CreateTheaterResponse;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-public interface TheaterAdminService extends UserDetailsService {
+public interface TheaterAdminService{
 
     AddShowToTheaterResponse addShowToTheater(AddShowTheaterRequest  addShowTheaterRequest);
     CreateTheaterResponse createTheater( CreateTheaterRequest createTheater);

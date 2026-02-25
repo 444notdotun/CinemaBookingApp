@@ -14,19 +14,21 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.ObjectMapper;
 @Slf4j
 @Service
 @NullMarked
-public class SuperAdminServiceImpl implements SuperAdminService, UserDetailsService {
+public class SuperAdminServiceImpl implements SuperAdminService {
     @Autowired
     AdminRepo adminRepo;
-    @Autowired
-    PasswordEncoder  passwordEncoder;
-    @Autowired
-    AuthenticationManager  authenticationManager;
+
+    PasswordEncoder  passwordEncoder = new BCryptPasswordEncoder();
+
+
+
 
     @Override
     public CreateAdminResponse createTheaterAdmin(CreateAdminRequest createAdminRequest) {

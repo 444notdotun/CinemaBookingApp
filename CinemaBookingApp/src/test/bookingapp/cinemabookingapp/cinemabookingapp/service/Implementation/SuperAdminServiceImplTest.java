@@ -1,4 +1,4 @@
-package bookingapp.cinemabookingapp.service.Implementation;
+package bookingapp.cinemabookingapp.cinemabookingapp.service.Implementation;
 
 import bookingapp.cinemabookingapp.data.models.SuperAdmin;
 import bookingapp.cinemabookingapp.data.repository.AdminRepo;
