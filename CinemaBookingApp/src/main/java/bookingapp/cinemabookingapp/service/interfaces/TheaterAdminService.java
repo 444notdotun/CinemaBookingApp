@@ -7,6 +7,7 @@ import bookingapp.cinemabookingapp.dtos.request.CreateTheaterRequest;
 import bookingapp.cinemabookingapp.dtos.response.AddShowToTheaterResponse;
 import bookingapp.cinemabookingapp.dtos.response.CreateShowResponse;
 import bookingapp.cinemabookingapp.dtos.response.CreateTheaterResponse;
+import bookingapp.cinemabookingapp.service.Implementation.CreateMovieResponse;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface TheaterAdminService{
@@ -15,5 +16,5 @@ public interface TheaterAdminService{
     CreateTheaterResponse createTheater( CreateTheaterRequest createTheater);
 
      CreateShowResponse createShow(CreateShowManagerRequest createShowManagerRequest);
-     String createMovie(CreateMovieRequest createMovieRequest);
+    CreateMovieResponse createMovie(CreateMovieRequest createMovieRequest);
 }

@@ -7,5 +7,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ShowRepository extends MongoRepository<Show,String> {
     boolean existsById(String id);
-
 }

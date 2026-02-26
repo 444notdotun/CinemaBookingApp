@@ -25,7 +25,8 @@ public class Mapper {
 
     public static CreateTheaterResponse SetCreateTheaterResponse(Theater theater) {
         CreateTheaterResponse createTheaterResponse = new CreateTheaterResponse();
-        createTheaterResponse.setMessage(theater.getId()+" created successfully");
+        createTheaterResponse.setMessage(theater.getName()+" theater created successfully");
+        createTheaterResponse.setId(theater.getId());
         return createTheaterResponse;
     }
 
@@ -45,6 +46,7 @@ public class Mapper {
     public static CreateShowResponse mapShowToCreateShowResponse(Show show) {
         CreateShowResponse createShowResponse = new CreateShowResponse();
         createShowResponse.setMessage("Show created successfully");
+        createShowResponse.setId(show.getId());
         return  createShowResponse;
     }
 

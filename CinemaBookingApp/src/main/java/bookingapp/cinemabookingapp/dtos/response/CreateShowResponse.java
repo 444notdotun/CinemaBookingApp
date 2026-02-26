@@ -5,4 +5,5 @@ import lombok.Data;
 @Data
 public class CreateShowResponse {
     private String message;
+    private String id;
 }

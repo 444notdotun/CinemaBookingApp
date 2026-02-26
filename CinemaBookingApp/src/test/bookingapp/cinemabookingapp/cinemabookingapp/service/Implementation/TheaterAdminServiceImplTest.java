@@ -6,10 +6,8 @@ import bookingapp.cinemabookingapp.data.models.Theater;
 import bookingapp.cinemabookingapp.data.repository.MovieRepo;
 import bookingapp.cinemabookingapp.data.repository.ShowRepository;
 import bookingapp.cinemabookingapp.data.repository.TheaterRepository;
-import bookingapp.cinemabookingapp.dtos.request.CreateAdminRequest;
-import bookingapp.cinemabookingapp.dtos.request.CreateMovieRequest;
-import bookingapp.cinemabookingapp.dtos.request.CreateShowManagerRequest;
-import bookingapp.cinemabookingapp.dtos.request.CreateTheaterRequest;
+import bookingapp.cinemabookingapp.dtos.request.*;
+import bookingapp.cinemabookingapp.dtos.response.CreateShowResponse;
 import bookingapp.cinemabookingapp.dtos.response.CreateTheaterResponse;
 import bookingapp.cinemabookingapp.service.interfaces.TheaterAdminService;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,6 +28,7 @@ class TheaterAdminServiceImplTest {
     CreateTheaterRequest  createTheaterRequest;
     CreateShowManagerRequest createShowManagerRequest;
     CreateMovieRequest createMovieRequest;
+    AddShowTheaterRequest  addShowTheaterRequest;
     @Autowired
     TheaterRepository  theaterRepository;
     @Autowired
@@ -56,13 +55,14 @@ class TheaterAdminServiceImplTest {
         createMovieRequest.setDirector("notdotun");
         createMovieRequest.setRating(5);
         createMovieRequest.setPosterUrl("https://www.london.com");
+        addShowTheaterRequest =  new AddShowTheaterRequest();
 
     }
 
 
     @Test
     void TheaterAdminCanCreateTheater() {
-        assertEquals("Theater london created successfully",theaterAdminService.createTheater(createTheaterRequest).getMessage());
+        assertEquals("london theater created successfully",theaterAdminService.createTheater(createTheaterRequest).getMessage());
         assertTrue(theaterRepository.existsByName("london"));
 
     }
@@ -71,7 +71,7 @@ class TheaterAdminServiceImplTest {
         TheaterAdminCanCreateTheater();
         createTheaterRequest.setName("nigeria");
         createTheaterRequest.setCity("nigeria");
-        assertEquals("Theater nigeria created successfully",theaterAdminService.createTheater(createTheaterRequest).getMessage());
+        assertEquals("nigeria theater created successfully",theaterAdminService.createTheater(createTheaterRequest).getMessage());
     }
 
     @Test
@@ -88,6 +88,19 @@ class TheaterAdminServiceImplTest {
     @Test
     void testThatMoviesCanBeCreated(){
         assertEquals("The Avengers Civil War created successfully",theaterAdminService.createMovie(createMovieRequest));
+    }
+
+    @Test
+    void testThatAdminCanAddShowToTheater(){
+        Movies movies = new Movies("676","avengers","avengersin war","nolan","4hrs",5.0,"url");
+        movieRepo.save(movies);
+        createShowManagerRequest.setMoviesId(movies.getMovieId());
+        CreateShowResponse createShowResponse =theaterAdminService.createShow(createShowManagerRequest);
+        assertEquals("Show created successfully",createShowResponse.getMessage());
+        addShowTheaterRequest.setShowId(createShowResponse.getId());
+        CreateTheaterResponse createTheaterResponse=theaterAdminService.createTheater(createTheaterRequest);
+        addShowTheaterRequest.setTheaterId(createTheaterResponse.getId());
+       assertEquals("show10 added successfully", theaterAdminService.addShowToTheater(addShowTheaterRequest).getMessage());
     }
 
 }

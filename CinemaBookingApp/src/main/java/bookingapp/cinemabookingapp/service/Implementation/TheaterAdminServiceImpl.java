@@ -54,7 +54,7 @@ public class TheaterAdminServiceImpl implements TheaterAdminService {
       if(theater.isEmpty()){
           throw new RuntimeException(addShowTheaterRequest.getTheaterId()+" not found");
       }
-      theater.get().setShowsId(List.of(addShowTheaterRequest.getShowId()));
+      theater.get().getShowsId().add(addShowTheaterRequest.getShowId());
       theaterRepository.save(theater.get());
       return Mapper.MapAddShowResponse(addShowTheaterRequest);
     }
@@ -82,12 +82,15 @@ public class TheaterAdminServiceImpl implements TheaterAdminService {
     }
 
     @Override
-    public String createMovie(CreateMovieRequest createMovieRequest) {
+    public CreateMovieResponse createMovie(CreateMovieRequest createMovieRequest) {
        Movies movies =  Mapper.mapMovieRequestToMovie(createMovieRequest);
        log.info("movie created successfully");
        movies.setMovieId("Movie"+counter++);
       movieRepo.save(movies);
-      return   movies.getTitle()+" created successfully";
+        CreateMovieResponse createMovieResponse = new CreateMovieResponse();
+        createMovieResponse.setMessage("movie created successfully");
+        createMovieResponse.setId(movies.getMovieId());
+      return createMovieResponse;
     }
 
 
