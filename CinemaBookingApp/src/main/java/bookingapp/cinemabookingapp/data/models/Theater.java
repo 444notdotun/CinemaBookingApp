@@ -7,6 +7,7 @@ import java.util.List;
 @Document("Theater")
 @Data
 public class Theater {
+
     private String id;
     private String city;
     private List<String> showsId;

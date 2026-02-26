@@ -25,14 +25,14 @@ public class Mapper {
 
     public static CreateTheaterResponse SetCreateTheaterResponse(Theater theater) {
         CreateTheaterResponse createTheaterResponse = new CreateTheaterResponse();
-        createTheaterResponse.setMessage("Theater "+theater.getName()+" created successfully");
+        createTheaterResponse.setMessage(theater.getId()+" created successfully");
         return createTheaterResponse;
     }
 
 
     public static AddShowToTheaterResponse MapAddShowResponse(AddShowTheaterRequest theater) {
         AddShowToTheaterResponse addShowToTheaterResponse = new AddShowToTheaterResponse();
-        addShowToTheaterResponse.setMessage(theater.getShowId()+" created successfully");
+        addShowToTheaterResponse.setMessage(theater.getShowId()+" added successfully");
         return addShowToTheaterResponse;
     }
 

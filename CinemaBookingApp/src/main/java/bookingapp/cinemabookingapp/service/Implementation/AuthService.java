@@ -39,7 +39,7 @@ public class AuthService implements Auth {
         return LoginResponse.builder()
                 .id(loginRequest.getId())
                 .accessToken(accessToken)
-                .refreshToken("coming_in_chapter_6")
+                .refreshToken("soon")
                 .build();
     }
 

@@ -64,7 +64,7 @@ public class TheaterAdminServiceImpl implements TheaterAdminService {
        Theater theater= Mapper.MapTheaterRequestToTheater(createTheater);
        theater.setId("Theater"+counter++);
         theaterRepository.save(theater);
-        log.info("theater created successfully");
+        log.info(" created successfully");
         return Mapper.SetCreateTheaterResponse(theater);
     }
 
@@ -76,6 +76,7 @@ public class TheaterAdminServiceImpl implements TheaterAdminService {
        }
         Show show =Mapper.mapDtosToShow(createShowManagerRequest);
         show.setId("show"+counter++);
+        showRepo.save(show);
         log.info("show created successfully");
         return Mapper.mapShowToCreateShowResponse(show);
     }
