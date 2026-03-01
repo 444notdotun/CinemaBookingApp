@@ -1,10 +1,15 @@
 package bookingapp.cinemabookingapp.data.repository;
 
 import bookingapp.cinemabookingapp.data.models.Booking;
+import bookingapp.cinemabookingapp.data.models.PaymentStatus;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Repository("Booking")
 public interface BookingRepository extends MongoRepository<Booking,String> {
+    List<Booking> findByPaymentStatusInAndExpirationTimeBefore(PaymentStatus paymentStatus, LocalDateTime expirationTime);
 
 }

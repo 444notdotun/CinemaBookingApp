@@ -45,6 +45,9 @@ public class TheaterAdminServiceImpl implements TheaterAdminService {
 
     private static int counter= 10;
 
+    @Autowired
+    IdGeneratorServices idGeneratorServices;
+
 
 
 
@@ -62,7 +65,7 @@ public class TheaterAdminServiceImpl implements TheaterAdminService {
     @Override
     public CreateTheaterResponse createTheater(CreateTheaterRequest createTheater) {
        Theater theater= Mapper.MapTheaterRequestToTheater(createTheater);
-       theater.setId("Theater"+counter++);
+       theater.setId(idGeneratorServices.generateId("theater"));
         theaterRepository.save(theater);
         log.info(" created successfully");
         return Mapper.SetCreateTheaterResponse(theater);
@@ -70,12 +73,11 @@ public class TheaterAdminServiceImpl implements TheaterAdminService {
 
     @Override
     public CreateShowResponse createShow(CreateShowManagerRequest createShowManagerRequest) {
-       if (movieRepo.findMovieByMovieId(createShowManagerRequest.getMoviesId()).isEmpty()){
-           log.info("movie not found");
-           throw new RuntimeException(" movie not found, create the movie");
-       }
+      Optional<Movies> movies = Optional.ofNullable(movieRepo.findMovieByMovieId(createShowManagerRequest.getMoviesId())
+              .orElseThrow(() -> new RuntimeException("Movie not found")));
         Show show =Mapper.mapDtosToShow(createShowManagerRequest);
-        show.setId("show"+counter++);
+        show.setId(idGeneratorServices.generateId("show"));
+        show.setMoviesId(movies.get().getMovieId());
         showRepo.save(show);
         log.info("show created successfully");
         return Mapper.mapShowToCreateShowResponse(show);
@@ -85,7 +87,7 @@ public class TheaterAdminServiceImpl implements TheaterAdminService {
     public CreateMovieResponse createMovie(CreateMovieRequest createMovieRequest) {
        Movies movies =  Mapper.mapMovieRequestToMovie(createMovieRequest);
        log.info("movie created successfully");
-       movies.setMovieId("Movie"+counter++);
+       movies.setMovieId(idGeneratorServices.generateId("movie"));
       movieRepo.save(movies);
         CreateMovieResponse createMovieResponse = new CreateMovieResponse();
         createMovieResponse.setMessage("movie created successfully");

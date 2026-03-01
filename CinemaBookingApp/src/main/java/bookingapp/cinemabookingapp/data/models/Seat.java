@@ -15,7 +15,7 @@ public class Seat {
     public Seat(int id,int seatNumber, int row ) {
         this.seatNumber = seatNumber;
         this.row = row;
-        this.id = String.valueOf("seat"+id);
+        this.id =("seat"+id);
         this.seatStatus = SeatStatus.OPEN;
     }
 }

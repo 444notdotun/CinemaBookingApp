@@ -5,5 +5,6 @@ import lombok.Data;
 
 public enum PaymentStatus {
     PAYMENT_SUCCESS,
-    PAYMENT_FAILED
+    PAYMENT_FAILED,
+    PAYMENT_PENDING,
 }

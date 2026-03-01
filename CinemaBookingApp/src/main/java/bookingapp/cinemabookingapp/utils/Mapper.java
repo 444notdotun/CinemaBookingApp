@@ -1,13 +1,10 @@
 package bookingapp.cinemabookingapp.utils;
 
 import bookingapp.cinemabookingapp.data.models.*;
-import bookingapp.cinemabookingapp.data.repository.ShowRepository;
 import bookingapp.cinemabookingapp.dtos.request.*;
-import bookingapp.cinemabookingapp.dtos.response.AddShowToTheaterResponse;
-import bookingapp.cinemabookingapp.dtos.response.CreateAdminResponse;
-import bookingapp.cinemabookingapp.dtos.response.CreateShowResponse;
-import bookingapp.cinemabookingapp.dtos.response.CreateTheaterResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import bookingapp.cinemabookingapp.dtos.response.*;
+
+import java.time.LocalTime;
 
 public class Mapper {
     public static Admin mapAdminRequestToTheaterAdmin(CreateAdminRequest createAdminRequest) {
@@ -52,5 +49,20 @@ public class Mapper {
 
     public static Movies mapMovieRequestToMovie(CreateMovieRequest createMovieRequest) {
         return new Movies("",createMovieRequest.getDescription(), createMovieRequest.getTitle(), createMovieRequest.getDirector(), createMovieRequest.getDuration(), createMovieRequest.getRating(), createMovieRequest.getPosterUrl());
+    }
+
+    public static Booking MapRequestToBooking(BookShowRequest bookShowRequest) {
+        Booking booking = new Booking();
+        booking.setSeatNumber(bookShowRequest.getSeatNumber());
+        booking.setUserName(bookShowRequest.getUserName());
+        booking.setShowId(bookShowRequest.getShowId());
+        return booking;
+    }
+
+    public static BookShowResponse MapBookingToResponse(Booking booking) {
+        BookShowResponse bookShowResponse = new BookShowResponse();
+        bookShowResponse.setBookingId(booking.getId());
+        bookShowResponse.setMessage("hi "+booking.getUserName() +" you've successfully booked successfully yourself a seat, head to the payment platform to finally secure it");
+        return bookShowResponse;
     }
 }
