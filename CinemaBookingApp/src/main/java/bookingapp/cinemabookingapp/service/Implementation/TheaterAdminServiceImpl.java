@@ -1,6 +1,5 @@
 package bookingapp.cinemabookingapp.service.Implementation;
 
-import bookingapp.cinemabookingapp.data.models.Admin;
 import bookingapp.cinemabookingapp.data.models.Movies;
 import bookingapp.cinemabookingapp.data.models.Show;
 import bookingapp.cinemabookingapp.data.models.Theater;
@@ -13,6 +12,7 @@ import bookingapp.cinemabookingapp.dtos.request.CreateMovieRequest;
 import bookingapp.cinemabookingapp.dtos.request.CreateShowManagerRequest;
 import bookingapp.cinemabookingapp.dtos.request.CreateTheaterRequest;
 import bookingapp.cinemabookingapp.dtos.response.AddShowToTheaterResponse;
+import bookingapp.cinemabookingapp.dtos.response.CreateMovieResponse;
 import bookingapp.cinemabookingapp.dtos.response.CreateShowResponse;
 import bookingapp.cinemabookingapp.dtos.response.CreateTheaterResponse;
 import bookingapp.cinemabookingapp.service.interfaces.TheaterAdminService;
@@ -20,15 +20,9 @@ import bookingapp.cinemabookingapp.utils.Mapper;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NullMarked;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import tools.jackson.databind.ObjectMapper;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @Slf4j

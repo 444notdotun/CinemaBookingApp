@@ -74,6 +74,13 @@ public class JwtServiceImpl implements JwtService {
         return extractClaims(token,Claims::getSubject);
     }
 
+//    @Override
+//    public String regenerateToken(String token) {
+//        Claims claims=extractAllClaims(token);
+//        claims.get
+//
+//    }
+
     private SecretKey getSecretKey() {
         byte[] decodedKey = Base64.getDecoder().decode(SecretKey);
         log.info("Decoded SecretKey from JWT Token");

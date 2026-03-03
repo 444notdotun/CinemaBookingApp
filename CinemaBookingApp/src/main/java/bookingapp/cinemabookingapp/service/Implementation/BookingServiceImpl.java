@@ -37,6 +37,7 @@ public class BookingServiceImpl implements BookingService {
         Seat seat = seatManager.getSeats().get(bookShowRequest.getSeatNumber());
         verifySeatStatus(seat);
         Booking booking = Mapper.MapRequestToBooking(bookShowRequest);
+        booking.setBookingPrice(show.getPrice());
         seat.setSeatStatus(SeatStatus.LOCKED);
         show.setSeatManagerId(seatManager);
         showRepo.save(show);
@@ -48,23 +49,23 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional
     @Override
-    @Scheduled(fixedRate = 3000)
+    @Scheduled(fixedRate = 20000)
     public void unBook() {
-        List<Booking> bookingList = new ArrayList<>();
+        List<Booking> bookingList;
         bookingList=bookingRepo.findByPaymentStatusInAndExpirationTimeBefore(PaymentStatus.PAYMENT_PENDING, LocalDateTime.now());
         if(bookingList.isEmpty()){
             log.info("booking list is empty");
+            log.info("time of action"+LocalDateTime.now());
+            System.out.println(bookingRepo.findAll());
+            return;
         }
-       System.out.println(bookingRepo.findAll());
+
         for(Booking booking : bookingList){
             Optional<Show> show = Optional.of(showRepo.findById(booking.getShowId())
                     .orElseThrow(() -> new RuntimeException("show not found")));
             SeatManager seatManager=show.get().getSeatManagerId();
             Seat seat =seatManager.getSeats().get(booking.getSeatNumber());
             seat .setSeatStatus(SeatStatus.OPEN);
-            System.out.println(seat);
-            System.out.println(show);
-            System.out.println(seatManager);
             showRepo.save(show.get());
         }
 

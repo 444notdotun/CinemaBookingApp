@@ -31,6 +31,6 @@ public class CinemaBookingAppApplication implements CommandLineRunner {
 //        if(adminRepo.existsAdminByRole(admin.getRole())){
 //            throw  new RuntimeException("Admin with id "+admin.getId()+" already exists");
 //        }
-//        adminRepo.save(admin);
+////        adminRepo.save(admin);
     }
 }

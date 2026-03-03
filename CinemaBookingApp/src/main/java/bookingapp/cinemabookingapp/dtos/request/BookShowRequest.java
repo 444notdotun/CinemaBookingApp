@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class BookShowRequest {
     private String showId;
-    private String userName;
+    private String email;
     private String seatNumber;
 }

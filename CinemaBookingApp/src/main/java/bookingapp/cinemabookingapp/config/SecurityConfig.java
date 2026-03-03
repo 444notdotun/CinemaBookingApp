@@ -38,6 +38,7 @@ public class SecurityConfig {
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth->auth
                         .requestMatchers("/Admin/Login").permitAll()
+                        .requestMatchers("/grandiloquently-unpredisposing-jaylynn.ngrok-free.dev").permitAll()
                         .anyRequest().authenticated()
                 ) .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((request, response, authException) ->

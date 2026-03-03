@@ -35,7 +35,7 @@ class BookingServiceImplTest {
     void setUp() {
         bookShowRequest =  new BookShowRequest();
         mongoTemplate.dropCollection(Booking.class);
-        bookShowRequest.setUserName("dotunTest");
+        bookShowRequest.setEmail("dotunTest");
         show = new Show("show202","moviw292","3hrs", LocalTime.of(2,10), BigDecimal.valueOf(200),new SeatManager(2,1));
         showRepository.save(show);
     }
@@ -57,13 +57,14 @@ class BookingServiceImplTest {
         BookShowResponse bookShowResponse = bookingService.bookShow(bookShowRequest);
         assertEquals("hi dotunTest you've successfully booked successfully yourself a seat, head to the payment platform to finally secure it",bookShowResponse.getMessage());
         assertEquals(SeatStatus.LOCKED,showRepository.findById(show.getId()).get().getSeatManagerId().getSeats().get("seat30").getSeatStatus());
-        Thread.sleep(60000);
-        bookingService.unBook();
+        Thread.sleep(6300000);
         assertEquals(SeatStatus.OPEN,showRepository.findById(show.getId()).get().getSeatManagerId().getSeats().get("seat30").getSeatStatus());
-
-
-
     }
+
+
+
+
+
 
 
 }

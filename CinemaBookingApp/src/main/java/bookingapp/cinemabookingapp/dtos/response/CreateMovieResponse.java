@@ -1,4 +1,4 @@
-package bookingapp.cinemabookingapp.service.Implementation;
+package bookingapp.cinemabookingapp.dtos.response;
 
 import lombok.Data;
 

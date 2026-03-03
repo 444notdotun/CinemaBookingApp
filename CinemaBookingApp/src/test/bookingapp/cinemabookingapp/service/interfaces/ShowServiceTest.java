@@ -5,8 +5,7 @@ import bookingapp.cinemabookingapp.dtos.request.CreateMovieRequest;
 
 import bookingapp.cinemabookingapp.dtos.request.CreateShowManagerRequest;
 import bookingapp.cinemabookingapp.dtos.response.CreateShowResponse;
-import bookingapp.cinemabookingapp.dtos.response.ShowDescriptionResponse;
-import bookingapp.cinemabookingapp.service.Implementation.CreateMovieResponse;
+import bookingapp.cinemabookingapp.dtos.response.CreateMovieResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

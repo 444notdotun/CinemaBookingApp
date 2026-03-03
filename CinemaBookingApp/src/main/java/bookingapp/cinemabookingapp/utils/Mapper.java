@@ -54,7 +54,7 @@ public class Mapper {
     public static Booking MapRequestToBooking(BookShowRequest bookShowRequest) {
         Booking booking = new Booking();
         booking.setSeatNumber(bookShowRequest.getSeatNumber());
-        booking.setUserName(bookShowRequest.getUserName());
+        booking.setUserName(bookShowRequest.getEmail());
         booking.setShowId(bookShowRequest.getShowId());
         return booking;
     }
@@ -62,7 +62,8 @@ public class Mapper {
     public static BookShowResponse MapBookingToResponse(Booking booking) {
         BookShowResponse bookShowResponse = new BookShowResponse();
         bookShowResponse.setBookingId(booking.getId());
-        bookShowResponse.setMessage("hi "+booking.getUserName() +" you've successfully booked successfully yourself a seat, head to the payment platform to finally secure it");
+        bookShowResponse.setMessage("""
+                HI ${booking.getUserName()}, YOUR SEAT IS RESERVED FOR THE NEXT 10 MINUTES, HEAD TO PAYMENT PLATFORM TO SECURE YOUR SEAT PERMANENTLY""");
         return bookShowResponse;
     }
 }
