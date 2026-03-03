@@ -1,6 +1,5 @@
 package bookingapp.cinemabookingapp.controller;
 
-import bookingapp.cinemabookingapp.dtos.request.PaymentResultRequest;
 import bookingapp.cinemabookingapp.service.interfaces.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +13,8 @@ public class PaymentController {
     PaymentService paymentService;
 
     @PostMapping
-    public ResponseEntity<?> listenToPaymentResult(@RequestBody PaymentResultRequest paymentResultRequest ,@RequestHeader("x-paystack-signature") String signature){
-        return  ResponseEntity.status(HttpStatus.OK).body(paymentService.ListenToPaymentResult(paymentResultRequest,signature));
+    public ResponseEntity<?> listenToPaymentResult(@RequestBody String paymentResultRequest ,@RequestHeader("x-paystack-signature") String signature){
+        paymentService.listenToPaymentResult(paymentResultRequest,signature);
+        return  ResponseEntity.status(HttpStatus.OK).build();
     }
 }

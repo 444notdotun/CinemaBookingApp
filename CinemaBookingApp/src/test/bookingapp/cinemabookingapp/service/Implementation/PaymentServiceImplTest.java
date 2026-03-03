@@ -12,6 +12,7 @@ import bookingapp.cinemabookingapp.dtos.response.BookShowResponse;
 import bookingapp.cinemabookingapp.dtos.response.PaymentResponse;
 import bookingapp.cinemabookingapp.service.interfaces.BookingService;
 import bookingapp.cinemabookingapp.service.interfaces.PaymentService;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import java.math.BigDecimal;
 import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.*;
+@Slf4j
 @SpringBootTest
 class PaymentServiceImplTest {
     @Autowired
@@ -80,10 +82,23 @@ class PaymentServiceImplTest {
     PaymentResponse paymentResponse= paymentService.pay(paymentRequest);
     assertNotNull(paymentResponse);
     assertEquals("Authorization URL created",paymentResponse.getMessage());
+    Thread.sleep(60000);
     Booking booking = bookingRepository.findById(paymentRequest.getBookingId())
             .orElseThrow(()-> new AssertionError("Booking not found"));
-    Thread.sleep(40000);
     assertEquals(PaymentStatus.PAYMENT_SUCCESS,booking.getPaymentStatus());
+}
+
+@Test
+    void testThatWebhookListensToPaymentCancel() throws IOException, InterruptedException {
+    PaymentResponse paymentResponse= paymentService.pay(paymentRequest);
+    assertNotNull(paymentResponse);
+    assertEquals("Authorization URL created",paymentResponse.getMessage());
+    Thread.sleep(60000);
+    Booking booking = bookingRepository.findById(paymentRequest.getBookingId())
+            .orElseThrow(()-> new AssertionError("Booking not found"));
+    log.info("fail ,bookingId:{}",booking.getId());
+    assertEquals(PaymentStatus.PAYMENT_FAILED,booking.getPaymentStatus());
+
 }
 
 }
