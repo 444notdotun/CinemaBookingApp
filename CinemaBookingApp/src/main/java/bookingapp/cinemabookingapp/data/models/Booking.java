@@ -18,14 +18,15 @@ public class Booking {
     private PaymentStatus paymentStatus;
     private String paymentId;
     private LocalTime expirationTime;
+    private LocalTime paymentTime;
     private String userName;
-    private LocalDateTime createdAt;
-    private LocalDateTime BookedAt;
+
+    private LocalDateTime bookedAt;
     private BigDecimal bookingPrice;
 
     public Booking(){
         this.expirationTime = LocalTime.now().plusMinutes(10);
-        this.createdAt = LocalDateTime.now();
+        this.bookedAt = LocalDateTime.now();
         this.paymentStatus = PaymentStatus.PAYMENT_PENDING;
         this.paymentId=UUID.randomUUID().toString();
     }
