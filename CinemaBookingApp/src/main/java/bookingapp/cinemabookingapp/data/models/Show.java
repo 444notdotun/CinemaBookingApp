@@ -17,5 +17,4 @@ public class Show {
     private LocalTime startTime;
     private BigDecimal price;
     private SeatManager seatManagerId;
-
 }
