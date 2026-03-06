@@ -1,6 +1,5 @@
 package bookingapp.cinemabookingapp.controller;
 
-import bookingapp.cinemabookingapp.data.models.SuperAdmin;
 import bookingapp.cinemabookingapp.dtos.request.*;
 import bookingapp.cinemabookingapp.service.interfaces.Auth;
 import bookingapp.cinemabookingapp.service.interfaces.SuperAdminService;
@@ -17,7 +16,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/Admin")
-public class SuperAdminController {
+public class AdminController {
 
     @Autowired
     private SuperAdminService superAdminService;
