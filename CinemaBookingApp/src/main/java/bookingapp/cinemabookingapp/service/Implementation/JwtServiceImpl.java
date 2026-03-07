@@ -30,7 +30,7 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        log.debug("Generating JWT Token");
+        log.info("Generating JWT Token");
         return Jwts.builder()
                 .claims(extraClaims)
                 .subject(userDetails.getUsername())
@@ -44,7 +44,7 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public boolean IsTokenValid(String token, UserDetails userDetails) {
         String username = extractUsername(token);
-        log.debug("Checking if token is valid");
+        log.info("Checking if token is valid");
         return (username.equals(userDetails.getUsername())&&!isTokenExpired(token));
     }
 
@@ -74,12 +74,6 @@ public class JwtServiceImpl implements JwtService {
         return extractClaims(token,Claims::getSubject);
     }
 
-//    @Override
-//    public String regenerateToken(String token) {
-//        Claims claims=extractAllClaims(token);
-//        claims.get
-//
-//    }
 
     private SecretKey getSecretKey() {
         byte[] decodedKey = Base64.getDecoder().decode(SecretKey);
