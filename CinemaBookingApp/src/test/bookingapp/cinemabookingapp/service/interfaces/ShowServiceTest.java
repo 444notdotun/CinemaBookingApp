@@ -1,11 +1,13 @@
 package bookingapp.cinemabookingapp.service.interfaces;
 
 import bookingapp.cinemabookingapp.data.repository.MovieRepo;
+import bookingapp.cinemabookingapp.data.repository.ShowRepository;
 import bookingapp.cinemabookingapp.dtos.request.CreateMovieRequest;
 
 import bookingapp.cinemabookingapp.dtos.request.CreateShowManagerRequest;
 import bookingapp.cinemabookingapp.dtos.response.CreateShowResponse;
 import bookingapp.cinemabookingapp.dtos.response.CreateMovieResponse;
+import bookingapp.cinemabookingapp.dtos.response.ShowReponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,8 @@ class ShowServiceTest {
     @Autowired
     MovieRepo  movieRepo;
     CreateShowManagerRequest  createShowManagerRequest;
+    @Autowired
+    ShowRepository  showRepository;
 
     @Autowired
     MongoTemplate  mongoTemplate;
@@ -62,6 +66,17 @@ class ShowServiceTest {
         createShowManagerRequest.setMoviesId(result.getId());
         CreateShowResponse createShowResponse=theaterAdminService.createShow(createShowManagerRequest);
         assertEquals(createMovieRequest.getDescription(), showService.ShowDescription(createShowResponse.getId()).getDescription());
+    }
+
+    @Test
+    void testThatYouCanSeeAShow(){
+        CreateMovieResponse result = theaterAdminService.createMovie(createMovieRequest);
+        assertTrue(movieRepo.existsMovieByMovieId(result.getId()));
+        createShowManagerRequest.setMoviesId(result.getId());
+        CreateShowResponse createShowResponse=theaterAdminService.createShow(createShowManagerRequest);
+        String showId = createShowResponse.getId();
+        ShowReponse showReponse =showService.getShow(showId );
+        assertEquals(showRepository.findById(showId).get().getSeatManagerId(),showReponse.getSeatManagerId());
     }
 
 

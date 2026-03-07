@@ -5,8 +5,13 @@ import bookingapp.cinemabookingapp.data.models.PaymentStatus;
 import bookingapp.cinemabookingapp.data.repository.BookingRepository;
 import bookingapp.cinemabookingapp.dtos.request.PaymentRequest;
 import bookingapp.cinemabookingapp.dtos.request.PaystackWebhookDTO;
+import bookingapp.cinemabookingapp.dtos.request.SendEmailRequest;
 import bookingapp.cinemabookingapp.dtos.response.PaymentResponse;
+import bookingapp.cinemabookingapp.exceptions.BookingNotFound;
+import bookingapp.cinemabookingapp.exceptions.validatePaymentHeader;
+import bookingapp.cinemabookingapp.service.interfaces.EmailServices;
 import bookingapp.cinemabookingapp.service.interfaces.PaymentService;
+import bookingapp.cinemabookingapp.utils.Mapper;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +22,15 @@ import tools.jackson.databind.ObjectMapper;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.LocalTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -34,18 +41,19 @@ public class PaymentServiceImpl implements PaymentService {
     @Value("${app.payStack.secret}")
     private String payStackSecretKey;
     @Autowired
-    IdGeneratorServices   idGeneratorServices;
+    EmailServices emailServices;
     @Autowired
     ObjectMapper objectMapper;
-    @Value("${app.allowedIps}")
-    private List<String> listOfIps;
+
 
     @Override
-    public PaymentResponse pay(PaymentRequest paymentRequest) throws IOException, InterruptedException {
-        String eMail = loadUsername(paymentRequest);
-        log.info("Payment request received for username {}",eMail);
+    public PaymentResponse pay(String  bookingId) throws IOException, InterruptedException {
+        Booking booking = loadUsername(bookingId);
+        PaymentRequest paymentRequest =Mapper.mapBookingToRequest(booking);
+        paymentRequest.setPrice(paymentRequest.getPrice().multiply(BigDecimal.valueOf(100)));
+        log.info("Payment request received for username {}",paymentRequest.getEmail());
 
-        Map<String, Object> jsonBody = getStringObjectMap(paymentRequest, eMail);
+        Map<String, Object> jsonBody = getStringObjectMap(paymentRequest);
         URI url = URI.create("https://api.paystack.co/transaction/initialize");
 
         String jsonPayload = objectMapper.writeValueAsString(jsonBody);
@@ -58,6 +66,7 @@ public class PaymentServiceImpl implements PaymentService {
                 .build();
         HttpResponse<String> response = client.send(request,HttpResponse.BodyHandlers.ofString());
         log.info("Response from PayStack API is {}", response.body());
+
         return objectMapper.readValue(response.body(),PaymentResponse.class);
     }
 
@@ -66,16 +75,23 @@ public class PaymentServiceImpl implements PaymentService {
         validateHeader(payload, signature);
         log.info("Webhook signature validated");
         PaystackWebhookDTO dto = parsePayload(payload);
+        log.info("Paystack Webhook received"+dto.getEvent());
         String reference = dto.getData().getReference();
         Booking booking = bookingRepository
                 .findByPaymentId(reference)
                 .orElseThrow(() ->
-                        new RuntimeException("Payment not found"));
+                        new BookingNotFound("Payment not found"));
         if (Idempotent(booking)) return;
         booking.setPaymentStatus(DeterminePaymentStatus(dto.getEvent()));
+        booking.setPaymentTime(LocalTime.now());
         bookingRepository.save(booking);
+        if(dto.getEvent().equals("charge.success")){
+            emailServices.sendTicketEmail(Mapper.createSenderRequest(booking.getUserName(),booking.getId()));
+            log.info("Booking {} marked as PAID", reference);
+        }else {
+            log.info("Booking {} marked as Unpaid", reference);
+        }
 
-        log.info("Booking {} marked as PAID", reference);
     }
 
     private static boolean Idempotent(Booking booking) {
@@ -103,10 +119,10 @@ public class PaymentServiceImpl implements PaymentService {
             byte[] hash = sha512Hmac.doFinal(payload.getBytes());
             String computedSignature = bytesToHex(hash);
             if (!computedSignature.equals(signature)) {
-                throw new RuntimeException("Invalid signature");
+                throw new validatePaymentHeader("Invalid signature");
             }
         } catch (Exception e) {
-            throw new RuntimeException("Signature validation failed");
+            throw new validatePaymentHeader("Signature validation failed");
         }
     }
 
@@ -128,26 +144,18 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
 
-    private @NonNull Map<String, Object> getStringObjectMap(PaymentRequest paymentRequest, String eMail) {
+    private @NonNull Map<String, Object> getStringObjectMap(PaymentRequest paymentRequest) {
         Map<String,Object> jsonBody = new HashMap<>();
-        jsonBody.put("email", eMail);
+        jsonBody.put("email", paymentRequest.getEmail());
         jsonBody.put("amount", paymentRequest.getPrice());
-        jsonBody.put("reference",loadBookingId(paymentRequest));
+        jsonBody.put("reference", paymentRequest.getReference());
         return jsonBody;
     }
 
-    private String loadUsername(PaymentRequest paymentRequest) {
-        Booking booking = bookingRepository.findById(paymentRequest.getBookingId())
-                .orElseThrow(() -> new RuntimeException("booking not made!"));
-
-        return booking.getUserName();
+    private Booking loadUsername(String bookingId) {
+        return bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new BookingNotFound("booking not made!"));
     }
 
-    private String loadBookingId(PaymentRequest paymentRequest) {
-        Booking booking = bookingRepository.findById(paymentRequest.getBookingId())
-                .orElseThrow(() -> new RuntimeException("booking not made!"));
-
-        return booking.getPaymentId();
-    }
 
 }

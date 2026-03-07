@@ -53,8 +53,8 @@ public class UserController {
     }
 
     @PostMapping("/payment")
-    public ResponseEntity<?> payment(@RequestBody PaymentRequest paymentRequest) throws IOException, InterruptedException {
-        return ResponseEntity.status(HttpStatus.CREATED).body(paymentService.pay(paymentRequest));
+    public ResponseEntity<?> payment(@PathVariable String id) throws IOException, InterruptedException {
+        return ResponseEntity.status(HttpStatus.CREATED).body(paymentService.pay(id));
     }
 
 }

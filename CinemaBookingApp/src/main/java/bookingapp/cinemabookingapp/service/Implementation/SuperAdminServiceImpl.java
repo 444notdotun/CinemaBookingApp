@@ -5,6 +5,7 @@ import bookingapp.cinemabookingapp.data.models.TheaterAdmin;
 import bookingapp.cinemabookingapp.data.repository.AdminRepo;
 import bookingapp.cinemabookingapp.dtos.request.CreateAdminRequest;
 import bookingapp.cinemabookingapp.dtos.response.CreateAdminResponse;
+import bookingapp.cinemabookingapp.exceptions.AdminAlreadyExistException;
 import bookingapp.cinemabookingapp.service.interfaces.SuperAdminService;
 import bookingapp.cinemabookingapp.utils.Mapper;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +35,7 @@ public class SuperAdminServiceImpl implements SuperAdminService {
     public CreateAdminResponse createTheaterAdmin(CreateAdminRequest createAdminRequest) {
         if(adminRepo.existsAdminById(createAdminRequest.getCity()+"Theater Admin")){
             log.info("admin already exists");
-            throw new RuntimeException("The Admin already exists");
+            throw new AdminAlreadyExistException("The Admin already exists");
         }
         createAdminRequest.setPassword(passwordEncoder.encode(createAdminRequest.getPassword()));
         Admin admin = Mapper.mapAdminRequestToTheaterAdmin(createAdminRequest);

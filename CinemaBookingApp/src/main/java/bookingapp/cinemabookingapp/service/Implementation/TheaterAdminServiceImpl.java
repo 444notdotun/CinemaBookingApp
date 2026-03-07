@@ -15,6 +15,8 @@ import bookingapp.cinemabookingapp.dtos.response.AddShowToTheaterResponse;
 import bookingapp.cinemabookingapp.dtos.response.CreateMovieResponse;
 import bookingapp.cinemabookingapp.dtos.response.CreateShowResponse;
 import bookingapp.cinemabookingapp.dtos.response.CreateTheaterResponse;
+import bookingapp.cinemabookingapp.exceptions.MovieNotFoundException;
+import bookingapp.cinemabookingapp.exceptions.TheaterNotFoundException;
 import bookingapp.cinemabookingapp.service.interfaces.TheaterAdminService;
 import bookingapp.cinemabookingapp.utils.Mapper;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +51,7 @@ public class TheaterAdminServiceImpl implements TheaterAdminService {
     public AddShowToTheaterResponse addShowToTheater(AddShowTheaterRequest addShowTheaterRequest) {
         Optional<Theater> theater = theaterRepository.findById(addShowTheaterRequest.getTheaterId());
       if(theater.isEmpty()){
-          throw new RuntimeException(addShowTheaterRequest.getTheaterId()+" not found");
+          throw new TheaterNotFoundException(addShowTheaterRequest.getTheaterId()+" not found");
       }
       theater.get().getShowsId().add(addShowTheaterRequest.getShowId());
       theaterRepository.save(theater.get());
@@ -68,7 +70,7 @@ public class TheaterAdminServiceImpl implements TheaterAdminService {
     @Override
     public CreateShowResponse createShow(CreateShowManagerRequest createShowManagerRequest) {
       Optional<Movies> movies = Optional.ofNullable(movieRepo.findMovieByMovieId(createShowManagerRequest.getMoviesId())
-              .orElseThrow(() -> new RuntimeException("Movie not found")));
+              .orElseThrow(() -> new MovieNotFoundException("Movie not found")));
         Show show =Mapper.mapDtosToShow(createShowManagerRequest);
         show.setId(idGeneratorServices.generateId("show"));
         show.setMoviesId(movies.get().getMovieId());

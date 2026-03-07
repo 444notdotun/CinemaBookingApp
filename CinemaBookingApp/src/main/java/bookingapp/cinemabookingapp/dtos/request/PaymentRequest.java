@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 @Data
 public class PaymentRequest{
     @NotBlank(message = "can not be blank")
-    private String bookingId;
+    private String email;
     @Min(value = 50)
     private BigDecimal price;
     @NotBlank(message = "can not be blank")

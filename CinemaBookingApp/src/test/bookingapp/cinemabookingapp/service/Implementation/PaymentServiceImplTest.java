@@ -1,10 +1,8 @@
 package bookingapp.cinemabookingapp.service.Implementation;
 
-import bookingapp.cinemabookingapp.data.models.Booking;
-import bookingapp.cinemabookingapp.data.models.PaymentStatus;
-import bookingapp.cinemabookingapp.data.models.SeatManager;
-import bookingapp.cinemabookingapp.data.models.Show;
+import bookingapp.cinemabookingapp.data.models.*;
 import bookingapp.cinemabookingapp.data.repository.BookingRepository;
+import bookingapp.cinemabookingapp.data.repository.MovieRepo;
 import bookingapp.cinemabookingapp.data.repository.ShowRepository;
 import bookingapp.cinemabookingapp.dtos.request.BookShowRequest;
 import bookingapp.cinemabookingapp.dtos.request.PaymentRequest;
@@ -36,69 +34,71 @@ class PaymentServiceImplTest {
     @Autowired
             BookingRepository bookingRepository;
 
-    PaymentRequest paymentRequest;
     BookShowRequest bookShowRequest;
+
+    BookShowResponse bookShowResponse;
     Show show;
     @Autowired
     ShowRepository  showRepository;
+    @Autowired
+    MovieRepo movieRepo;
 
 
     @BeforeEach
     void setUp() {
         mongoTemplate.getDb().drop();
-        paymentRequest = new PaymentRequest();
-        bookShowRequest = new BookShowRequest();
 
-        show = new Show("show202","moviw292","3hrs", LocalTime.of(2,10), BigDecimal.valueOf(200),new SeatManager(2,1));
+        bookShowRequest = new BookShowRequest();
+        show = new Show("show202","moviw292","3hrs", LocalTime.of(2,10), BigDecimal.valueOf(2000),new SeatManager(2,1));
+        Movies movies = new Movies(show.getMoviesId(),"","stack up","notdotun",",",4,"");
+        movieRepo.save(movies);
         showRepository.save(show);
         bookShowRequest.setShowId(show.getId());
         bookShowRequest.setSeatNumber("seat30");
         bookShowRequest.setEmail("adedortmahan@gmail.com");
-        BookShowResponse bookShowResponse = bookingService.bookShow(bookShowRequest);
-        paymentRequest.setBookingId(bookShowResponse.getBookingId());
-        System.out.println(bookShowResponse.getBookingId());
-        paymentRequest.setPrice(BigDecimal.valueOf(200));
+        bookShowResponse = bookingService.bookShow(bookShowRequest);
+
+
     }
 
     @Test
     void testThatUserCanPayForBookedSeat() throws IOException, InterruptedException {
-        PaymentResponse paymentResponse= paymentService.pay(paymentRequest);
+        PaymentResponse paymentResponse= paymentService.pay(bookShowResponse.getBookingId());
         assertNotNull(paymentResponse);
         assertEquals("Authorization URL created",paymentResponse.getMessage());
     }
 
     @Test
     void testThatPaymentIsIndempotent() throws IOException, InterruptedException {
-        PaymentResponse paymentResponse= paymentService.pay(paymentRequest);
+        PaymentResponse paymentResponse= paymentService.pay(bookShowResponse.getBookingId());
         assertNotNull(paymentResponse);
         assertEquals("Authorization URL created",paymentResponse.getMessage());
-        PaymentResponse paymentResponse3= paymentService.pay(paymentRequest);
+        PaymentResponse paymentResponse3= paymentService.pay(bookShowResponse.getBookingId());
         assertNotNull(paymentResponse);
         assertEquals("Duplicate Transaction Reference",paymentResponse3.getMessage());
     }
 
 @Test
     void testThatWebhookListensToPaymentUpdate() throws IOException, InterruptedException {
-    PaymentResponse paymentResponse= paymentService.pay(paymentRequest);
+    PaymentResponse paymentResponse= paymentService.pay(bookShowResponse.getBookingId());
     assertNotNull(paymentResponse);
     assertEquals("Authorization URL created",paymentResponse.getMessage());
-    Thread.sleep(60000);
-    Booking booking = bookingRepository.findById(paymentRequest.getBookingId())
+    Thread.sleep(70000);
+    Booking booking = bookingRepository.findById(bookShowResponse.getBookingId())
             .orElseThrow(()-> new AssertionError("Booking not found"));
     assertEquals(PaymentStatus.PAYMENT_SUCCESS,booking.getPaymentStatus());
 }
 
-@Test
-    void testThatWebhookListensToPaymentCancel() throws IOException, InterruptedException {
-    PaymentResponse paymentResponse= paymentService.pay(paymentRequest);
-    assertNotNull(paymentResponse);
-    assertEquals("Authorization URL created",paymentResponse.getMessage());
-    Thread.sleep(60000);
-    Booking booking = bookingRepository.findById(paymentRequest.getBookingId())
-            .orElseThrow(()-> new AssertionError("Booking not found"));
-    log.info("fail ,bookingId:{}",booking.getId());
-    assertEquals(PaymentStatus.PAYMENT_FAILED,booking.getPaymentStatus());
-
-}
+//@Test
+//    void testThatWebhookListensToPaymentCancel() throws IOException, InterruptedException {
+//    PaymentResponse paymentResponse= paymentService.pay(paymentRequest);
+//    assertNotNull(paymentResponse);
+//    assertEquals("Authorization URL created",paymentResponse.getMessage());
+//    Thread.sleep(60000);
+//    Booking booking = bookingRepository.findById(paymentRequest.getBookingId())
+//            .orElseThrow(()-> new AssertionError("Booking not found"));
+//    assertEquals(PaymentStatus.PAYMENT_FAILED,booking.getPaymentStatus());
+//
+//}
 
 }

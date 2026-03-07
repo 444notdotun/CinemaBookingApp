@@ -10,7 +10,5 @@ import bookingapp.cinemabookingapp.dtos.response.Receipt;
 public interface BookingService {
     BookShowResponse bookShow(BookShowRequest bookShowRequest);
 
-    ;
-
     Receipt generateReceipt(String bookingId);
 }
