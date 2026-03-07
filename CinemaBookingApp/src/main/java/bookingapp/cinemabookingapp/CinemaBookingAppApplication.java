@@ -26,11 +26,11 @@ public class CinemaBookingAppApplication implements CommandLineRunner {
 
     @Override
     public void run(String @NonNull ... args){
-//        Admin admin = new SuperAdmin("Superadmin1955","Superadminpassword", Role.SUPER_ADMIN);
-//        admin.setPassword(passwordEncoder.encode(admin.getPassword()));
-//        if(adminRepo.existsAdminByRole(admin.getRole())){
-//            throw  new RuntimeException("Admin with id "+admin.getId()+" already exists");
-//        }
-////        adminRepo.save(admin);
+        Admin admin = new SuperAdmin("Superadmin1955","Superadminpassword", Role.SUPER_ADMIN);
+        admin.setPassword(passwordEncoder.encode(admin.getPassword()));
+        if(adminRepo.existsAdminByRole(admin.getRole())){
+            throw  new RuntimeException("Admin with id "+admin.getId()+" already exists");
+        }
+        adminRepo.save(admin);
     }
 }
