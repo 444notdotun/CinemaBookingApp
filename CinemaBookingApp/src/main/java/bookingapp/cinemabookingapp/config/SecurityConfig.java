@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth->auth
                         .requestMatchers("/Admin/Login").permitAll()
-                        .requestMatchers("/paymentApi").permitAll()
+                        .requestMatchers("/user/*").permitAll()
                         .anyRequest().authenticated()
                 ) .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((request, response, authException) ->
