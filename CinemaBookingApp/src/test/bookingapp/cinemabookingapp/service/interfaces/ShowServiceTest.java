@@ -49,7 +49,7 @@ class ShowServiceTest {
         createShowManagerRequest = new CreateShowManagerRequest();
         createShowManagerRequest.setPrice(BigDecimal.valueOf(200));
         createShowManagerRequest.setStartTime(LocalTime.of(4,20));
-        createShowManagerRequest.setSeatManagerId("");
+
         createShowManagerRequest.setDuration("2hrs");
         createShowManagerRequest.setRowsOfSeats(2);
         createShowManagerRequest.setNoOfSeats(1);

@@ -3,6 +3,7 @@ package bookingapp.cinemabookingapp.controller;
 import bookingapp.cinemabookingapp.dtos.request.BookShowRequest;
 import bookingapp.cinemabookingapp.dtos.request.PaymentRequest;
 import bookingapp.cinemabookingapp.service.interfaces.*;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("user/")
+@RequestMapping("user")
 public class UserController {
     @Autowired
     TheaterService theaterService;
@@ -43,7 +44,7 @@ public class UserController {
     }
 
     @PostMapping("/bookAShow")
-    public ResponseEntity<?> bookAShow(@RequestBody BookShowRequest bookShowRequest){
+    public ResponseEntity<?> bookAShow(@Valid @RequestBody BookShowRequest bookShowRequest){
         return ResponseEntity.status(HttpStatus.CREATED).body(bookingService.bookShow(bookShowRequest));
     }
 
@@ -52,7 +53,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(bookingService.generateReceipt(id));
     }
 
-    @PostMapping("/payment")
+    @PostMapping("/payment/{id}")
     public ResponseEntity<?> payment(@PathVariable String id) throws IOException, InterruptedException {
         return ResponseEntity.status(HttpStatus.CREATED).body(paymentService.pay(id));
     }

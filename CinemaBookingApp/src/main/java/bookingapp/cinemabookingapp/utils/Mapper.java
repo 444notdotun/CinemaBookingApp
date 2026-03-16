@@ -18,6 +18,7 @@ public class Mapper {
     public static CreateAdminResponse MapAdminToResponse(Admin admin) {
         CreateAdminResponse createAdminResponse = new CreateAdminResponse();
         createAdminResponse.setMessage(admin.getId()+" created successfully");
+        createAdminResponse.setId(admin.getId());
         return createAdminResponse;
     }
 

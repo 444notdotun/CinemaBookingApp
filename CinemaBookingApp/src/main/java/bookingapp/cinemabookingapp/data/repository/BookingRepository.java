@@ -13,4 +13,5 @@ import java.util.Optional;
 public interface BookingRepository extends MongoRepository<Booking,String> {
     List<Booking> findByPaymentStatusInAndExpirationTimeBefore(PaymentStatus paymentStatus, LocalDateTime expirationTime);
     Optional<Booking> findByPaymentId(String paymentId);
+    List<Booking> findByPaymentStatus(PaymentStatus paymentStatus);
 }

@@ -7,10 +7,7 @@ import bookingapp.cinemabookingapp.data.repository.ShowRepository;
 import bookingapp.cinemabookingapp.dtos.request.BookShowRequest;
 import bookingapp.cinemabookingapp.dtos.response.BookShowResponse;
 import bookingapp.cinemabookingapp.dtos.response.Receipt;
-import bookingapp.cinemabookingapp.exceptions.BookingNotFound;
-import bookingapp.cinemabookingapp.exceptions.MovieNotFoundException;
-import bookingapp.cinemabookingapp.exceptions.SeatDetailException;
-import bookingapp.cinemabookingapp.exceptions.ShowNotFoundException;
+import bookingapp.cinemabookingapp.exceptions.*;
 import bookingapp.cinemabookingapp.service.interfaces.BookingService;
 import bookingapp.cinemabookingapp.utils.Mapper;
 import lombok.extern.slf4j.Slf4j;
@@ -86,6 +83,9 @@ public class BookingServiceImpl implements BookingService {
 
      Movies movies= movieRepo.findMovieByMovieId(show.getMoviesId())
               .orElseThrow(()-> new MovieNotFoundException("MOVIE NOT FOUND"));
+     if (!booking.getPaymentStatus().equals(PaymentStatus.PAYMENT_SUCCESS)) {
+         throw  new PaymentNotSuccessfulException("payment not successful");
+     }
      return Mapper.createReceipt(booking,show,movies);
     }
 

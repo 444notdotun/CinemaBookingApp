@@ -36,4 +36,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> validatePaymentHeader(Exception ex){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
+    @ExceptionHandler(PaymentNotSuccessfulException.class)
+    public ResponseEntity<?> paymentNotSuccessful(Exception ex){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
 }

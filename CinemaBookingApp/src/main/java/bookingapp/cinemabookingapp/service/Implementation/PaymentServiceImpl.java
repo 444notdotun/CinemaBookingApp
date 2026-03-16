@@ -5,7 +5,6 @@ import bookingapp.cinemabookingapp.data.models.PaymentStatus;
 import bookingapp.cinemabookingapp.data.repository.BookingRepository;
 import bookingapp.cinemabookingapp.dtos.request.PaymentRequest;
 import bookingapp.cinemabookingapp.dtos.request.PaystackWebhookDTO;
-import bookingapp.cinemabookingapp.dtos.request.SendEmailRequest;
 import bookingapp.cinemabookingapp.dtos.response.PaymentResponse;
 import bookingapp.cinemabookingapp.exceptions.BookingNotFound;
 import bookingapp.cinemabookingapp.exceptions.validatePaymentHeader;
@@ -16,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.ObjectMapper;
 
@@ -24,13 +24,14 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @Service
 @Slf4j
@@ -156,6 +157,27 @@ public class PaymentServiceImpl implements PaymentService {
         return bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new BookingNotFound("booking not made!"));
     }
+//
+//    @Scheduled(fixedRate = 180000)
+//    private void pollingPayStack() throws URISyntaxException, IOException, InterruptedException {
+//        List<Booking> bookingList =bookingRepository.findByPaymentStatus(PaymentStatus.PAYMENT_PENDING);
+//        if(bookingList.isEmpty()) return;
+//        for(Booking booking : bookingList){
+//            String reference = booking.getPaymentId();
+//            URI url = new URI("https://api.paystack.co/transaction/verify/"+ reference);
+//
+//            HttpClient client =  HttpClient.newBuilder().build();
+//            HttpRequest request = HttpRequest.newBuilder()
+//                    .GET()
+//                    .uri(url)
+//                    .header("authorization","Bearer"+payStackSecretKey)
+//                    .build();
+//            HttpResponse<String> response =client.send(request, HttpResponse.BodyHandlers.ofString());
+//
+//        }
+//    }
+//
+//    private
 
 
 }

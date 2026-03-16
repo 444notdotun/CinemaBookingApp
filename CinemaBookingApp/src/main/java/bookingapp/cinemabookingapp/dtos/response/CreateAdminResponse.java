@@ -5,4 +5,5 @@ import lombok.Data;
 @Data
 public class CreateAdminResponse {
     private String message;
+    private  String id;
 }

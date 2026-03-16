@@ -20,8 +20,8 @@ public class CreateShowManagerRequest {
     private LocalTime startTime;
     @NotNull(message = "cannot be blank")
     private BigDecimal price;
-    @NotBlank(message = "cannot br blank")
-    private String seatManagerId;
+//    @NotBlank(message = "cannot br blank")
+//    private String seatManagerId;
     @Positive(message = "must be greater than 0")
     private int noOfSeats;
     @Positive(message = "must be greater than 0")
