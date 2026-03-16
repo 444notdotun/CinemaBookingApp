@@ -43,7 +43,6 @@ public class EmailServiceimpl implements EmailServices {
 
         Show show = showRepo.findById(booking.getShowId())
                 .orElseThrow(()-> new ShowNotFoundException("SHOW CAN NOT BE FOUND"));
-        IO.println(sendEmailRequest.getEmail());
         Movies movies = movieRepo.findMovieByMovieId(show.getMoviesId())
                 .orElseThrow(()-> new MovieNotFoundException("MOVIE CANNOT BE FOUND"));
 
