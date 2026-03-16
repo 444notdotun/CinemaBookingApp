@@ -24,12 +24,17 @@ public class AuthService implements Auth {
 
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getId(),
-                       loginRequest.getPassword()
-                )
-        );
+        try {
+
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getId(),
+                            loginRequest.getPassword()
+                    )
+            );
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         log.info("Authentication Successful");
 
         UserDetails user = superAdminService.loadUserByUsername(loginRequest.getId());
