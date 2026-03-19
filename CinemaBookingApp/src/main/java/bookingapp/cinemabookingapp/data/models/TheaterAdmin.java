@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-@Document
+@Document(collection = "admins")
 public class TheaterAdmin extends Admin {
 
 
