@@ -13,7 +13,7 @@ import java.util.Collections;
 
 @Data
 @AllArgsConstructor
-@Document
+@Document(collection = "admins")
 public class Admin implements UserDetails {
 
     private String id;
