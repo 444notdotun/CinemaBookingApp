@@ -15,7 +15,7 @@ import java.util.Collections;
 @AllArgsConstructor
 @Document(collection = "admins")
 public class Admin implements UserDetails {
-
+    @Id
     private String id;
     private String Password;
     private Role  role;
