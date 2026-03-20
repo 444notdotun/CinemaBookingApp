@@ -1,5 +1,6 @@
 package bookingapp.cinemabookingapp.config;
 
+import bookingapp.cinemabookingapp.service.interfaces.SuperAdminService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -23,8 +24,9 @@ import org.springframework.security.web.csrf.CsrfFilter;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
     @Autowired
-    UserDetailsService userDetailsService;
+    SuperAdminService  superAdminService;
     @Autowired
     JwtFilter jwtFilter;
     @Autowired
@@ -57,7 +59,7 @@ public class SecurityConfig {
     }
     @Bean
     public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider(userDetailsService);
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider(superAdminService);
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder.passwordEncoder());
         return daoAuthenticationProvider;
     }
